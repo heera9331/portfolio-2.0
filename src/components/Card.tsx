@@ -6,7 +6,7 @@ interface cardProps {
 }
 
 const Card = ({ children, className = "" }: cardProps) => {
-  return <div className={`card bg-secondary border-border-light ${className}`}>{children}</div>;
+  return <div className={`card bg-secondary  ${className}`}>{children}</div>;
 };
 
 export default Card;
