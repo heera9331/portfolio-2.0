@@ -19,13 +19,31 @@ export default function Page() {
   }, [params]);
 
   return (
-    <div className="grid grid-cols-12 px-40 space-x-6 my-4 relative">
-      <Sidebar className={"col-span-3 sticky top-4 !min-h-[95vh]"} />
-      <Card className="col-span-9 !min-h-[95vh]">
-        <main className="">
+    <div className="grid grid-cols-12 px-4 md:px-10 lg:px-40 gap-4 my-4 relative">
+      <Sidebar
+        className={"hidden md:block md:col-span-3 sticky top-4 !min-h-[95vh]"}
+      />
+
+      <Card className="card flex gap-4 col-span-12 md:hidden">
+        <div className="flex items-center justify-center p-0 bg-ternary rounded-2xl">
+          <Image
+            className="w-[100px]"
+            width={200}
+            height={200}
+            src={"/images/avatars/heera.png"}
+          />
+        </div>
+        <div className="flex flex-col gap-2 my-1">
+          <h1 className="text-2xl font-semibold">Heera Singh Lodhi</h1>
+          <p className="px-3 py-1 rounded-lg bg-red-500 text-light text-center w-fit">Web Developer</p>
+        </div>
+      </Card>
+
+      <Card className="col-span-12 md:col-span-9 min-w-full !min-h-[95vh]">
+        <main className="w-full">
           {/* navigation */}
           <nav className="">
-            <ul className="flex gap-1 bg-ternary p-3 rounded-lg">
+            <ul className="flex gap-1 bg-ternary p-3 rounded-lg overflow-auto">
               {[
                 "home",
                 "education",
@@ -559,10 +577,10 @@ const Blogs = () => {
 
       <section className="flex flex-col gap-4 mt-6">
         {loading && <div className="loader"></div>}
-        <ul className="grid grid-cols-2 gap-6">
+        <ul className="grid grid-cols-2 sm:gap-2 md:gap-6">
           {blogs.map((blog: any) => {
             return (
-              <div key={blog.id} className="sm:col-span-2 md:col-span-1">
+              <div key={blog.id} className="col-span-2 md:col-span-1 w-full">
                 <div className="rounded-2xl">
                   <img
                     src={blog.jetpack_featured_media_url}
@@ -618,7 +636,7 @@ const Contacts = () => {
         ></iframe>
 
         <form action="post" className="flex gap-2 flex-col">
-          <div className="flex gap-4 w-full">
+          <div className="flex flex-col md:flex-row gap-4 w-full">
             <div className="flex gap-2 flex-col border-ternary w-full">
               <label htmlFor="name">Name</label>
               <input
