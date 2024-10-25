@@ -17,3 +17,16 @@ bun dev
 ## Referance or Notes to remember
 
 https://css-loaders.com/spinner/
+
+
+# Features to be added
+
+1. integrate google form or wp form
+2. 
+
+
+## Build tips
+
+1. clear cache
+2. try different terminal
+3. 

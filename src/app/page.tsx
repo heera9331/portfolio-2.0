@@ -5,6 +5,71 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import MobileHeader from "@/components/mobile-header";
+
+import {
+  IoHome,
+  IoSchool,
+  IoBriefcase,
+  IoFolder,
+  IoStar,
+  IoDocumentText,
+  IoCall,
+  IoLink,
+  IoCode,
+  IoApps,
+  IoDesktop,
+  IoCreate,
+} from "react-icons/io5"; // Example imports
+
+const tabIcons: Record<string, JSX.Element> = {
+  home: <IoHome />,
+  education: <IoSchool />,
+  experience: <IoBriefcase />,
+  projects: <IoFolder />,
+  skills: <IoStar />,
+  blogs: <IoDocumentText />,
+  contacts: <IoCall />,
+};
+
+interface TabMenuProps {
+  activeTab: string;
+  handleTabChange: (tab: string) => void;
+}
+
+const TabMenu: React.FC<TabMenuProps> = ({ activeTab, handleTabChange }) => {
+  const tabs = [
+    "home",
+    "education",
+    "experience",
+    "projects",
+    "skills",
+    "blogs",
+    "contacts",
+  ];
+
+  return (
+    <ul className="flex overflow-auto" style={{ scrollbarWidth: "none" }}>
+      {tabs.map((tab) => (
+        <li
+          key={tab}
+          className={`mr-2 px-4 py-2 rounded-lg cursor-pointer font-medium ${
+            activeTab === tab
+              ? "bg-primary text-yellow"
+              : "bg-secondary text-light"
+          }`}
+          onClick={() => handleTabChange(tab)}
+        >
+          <Link href={`?tab=${tab}`} className="flex gap-3 items-center">
+            {tabIcons[tab]} {/* Render the icon based on the tab */}
+            <span>{tab.charAt(0).toUpperCase() + tab.slice(1)}</span>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 export default function Page() {
   const params = useSearchParams();
@@ -19,67 +84,43 @@ export default function Page() {
   }, [params]);
 
   return (
-    <div className="grid grid-cols-12 px-4 md:px-10 lg:px-40 gap-4 my-4 relative">
-      <Sidebar
-        className={"hidden md:block md:col-span-3 sticky top-4 !min-h-[95vh]"}
-      />
+    <>
+      <Toaster />
+      <div className="grid grid-cols-12 px-4 md:px-10 lg:px-40 gap-4 my-4 relative">
+        {/* sidebar only visible on md | desktop */}
+        <Sidebar
+          className={"hidden md:block md:col-span-3 sticky top-4 !min-h-[95vh]"}
+        />
 
-      <Card className="card flex gap-4 col-span-12 md:hidden">
-        <div className="flex items-center justify-center p-0 bg-ternary rounded-2xl">
-          <Image
-            className="w-[100px]"
-            width={200}
-            height={200}
-            src={"/images/avatars/heera.png"}
-          />
-        </div>
-        <div className="flex flex-col gap-2 my-1">
-          <h1 className="text-2xl font-semibold">Heera Singh Lodhi</h1>
-          <p className="px-3 py-1 rounded-lg bg-red-500 text-light text-center w-fit">Web Developer</p>
-        </div>
-      </Card>
+        {/* mobile header */}
+        <MobileHeader />
 
-      <Card className="col-span-12 md:col-span-9 min-w-full !min-h-[95vh]">
-        <main className="w-full">
-          {/* navigation */}
-          <nav className="">
-            <ul className="flex gap-1 bg-ternary p-3 rounded-lg overflow-auto">
-              {[
-                "home",
-                "education",
-                "experience",
-                "projects",
-                "skills",
-                "blogs",
-                "contacts",
-              ].map((tab) => (
-                <li
-                  key={tab}
-                  className={`mr-2 px-2 py-1 rounded-lg cursor-pointer font-medium ${
-                    activeTab === tab
-                      ? "bg-primary text-yellow"
-                      : "bg-secondary text-light"
-                  }`}
-                  onClick={() => handleTabChange(tab)}
-                >
-                  <Link href={`?tab=${tab}`}>
-                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </main>
+        <Card className="col-span-12 md:col-span-9 min-w-full !min-h-[95vh]">
+          <main className="w-full">
+            {/* navigation */}
+            <nav className="overflow-hidden">
+              <ul
+                className="flex gap-1 bg-ternary p-3 rounded-lg"
+                style={{ scrollbarWidth: "none" }}
+              >
+                <TabMenu
+                  activeTab={activeTab}
+                  handleTabChange={handleTabChange}
+                />
+              </ul>
+            </nav>
+          </main>
 
-        {activeTab === "home" && <Home />}
-        {activeTab === "education" && <Education />}
-        {activeTab === "experience" && <Experience />}
-        {activeTab === "projects" && <Projects />}
-        {activeTab === "skills" && <Skills />}
-        {activeTab === "blogs" && <Blogs />}
-        {activeTab === "contacts" && <Contacts />}
-      </Card>
-    </div>
+          {activeTab === "home" && <Home />}
+          {activeTab === "education" && <Education />}
+          {activeTab === "experience" && <Experience />}
+          {activeTab === "projects" && <Projects />}
+          {activeTab === "skills" && <Skills />}
+          {activeTab === "blogs" && <Blogs />}
+          {activeTab === "contacts" && <Contacts />}
+        </Card>
+      </div>
+    </>
   );
 }
 
@@ -108,11 +149,9 @@ const Home = () => {
       <div className="flex flex-col gap-3 font-medium mt-4">
         <h2 className="text-2xl font-semibold">What I&apos; m doing</h2>
         <ul className="grid grid-cols-2 gap-6">
-          <li className="col-span-2 md:col-span-1 border p-2 rounded-[12px] flex gap-2 items-center">
+          <li className="col-span-2 md:col-span-1 border p-4 rounded-[12px] flex gap-2 items-center">
             <div className="p-4">
-              <span className="material-symbols-outlined text-[20px] text-green-600">
-                check_circle
-              </span>
+              <IoCode className="text-[28px] text-yellow" />
             </div>
             <div className="">
               <h3 className="font-semibold text-xl">Web Design</h3>
@@ -122,11 +161,9 @@ const Home = () => {
               </p>
             </div>
           </li>
-          <li className="col-span-2 md:col-span-1 border p-2 rounded-[12px] flex gap-2 items-center">
+          <li className="col-span-2 md:col-span-1 border p-4 rounded-[12px] flex gap-2 items-center">
             <div className="p-4">
-              <span className="material-symbols-outlined text-[20px] text-green-600">
-                check_circle
-              </span>
+              <IoDesktop className="text-[28px] text-yellow" />
             </div>
             <div className="">
               <h3 className="font-semibold text-xl">Web development</h3>
@@ -135,11 +172,9 @@ const Home = () => {
               </p>
             </div>
           </li>
-          <li className="col-span-2 md:col-span-1 border p-2 rounded-[12px] flex gap-2 items-center">
+          <li className="col-span-2 md:col-span-1 border p-4 rounded-[12px] flex gap-2 items-center">
             <div className="p-4">
-              <span className="material-symbols-outlined text-[20px] text-green-600">
-                check_circle
-              </span>
+              <IoApps className="text-[28px] text-yellow" />
             </div>
             <div className="">
               <h3 className="font-semibold text-xl">Mobile apps</h3>
@@ -148,11 +183,9 @@ const Home = () => {
               </p>
             </div>
           </li>
-          <li className="col-span-2 md:col-span-1 border p-2 rounded-[12px] flex gap-2 items-center">
+          <li className="col-span-2 md:col-span-1 border p-4 rounded-[12px] flex gap-2 items-center">
             <div className="p-4">
-              <span className="material-symbols-outlined text-[20px] text-green-600">
-                check_circle
-              </span>
+              <IoCreate className="text-[28px] text-yellow" />
             </div>
             <div className="">
               <h3 className="font-semibold text-xl">Content Creator</h3>
@@ -581,10 +614,11 @@ const Blogs = () => {
           {blogs.map((blog: any) => {
             return (
               <div key={blog.id} className="col-span-2 md:col-span-1 w-full">
-                <div className="rounded-2xl">
+                <div className="rounded-2xl overflow-hidden">
                   <img
                     src={blog.jetpack_featured_media_url}
-                    className="rounded-2xl"
+                    className="rounded-2xl hover:scale-[1.05] transition-all delay-200"
+                    alt=""
                   />
                 </div>
                 <div className="post-meta my-2 flex flex-col justify-center">
@@ -600,7 +634,9 @@ const Blogs = () => {
                     </i>
                   </p>
                   <h2 className="text-xl font-semibold mt-2">
-                    {blog.title.rendered}
+                    <Link href={blog.link} target="_blank">
+                      {blog.title.rendered}
+                    </Link>
                   </h2>
 
                   <div className="my-2">
@@ -635,45 +671,68 @@ const Contacts = () => {
           className="w-full rounded-2xl"
         ></iframe>
 
-        <form action="post" className="flex gap-2 flex-col">
-          <div className="flex flex-col md:flex-row gap-4 w-full">
-            <div className="flex gap-2 flex-col border-ternary w-full">
-              <label htmlFor="name">Name</label>
-              <input
-                type="text"
-                placeholder="name"
-                name="name"
-                id="name"
-                className="rounded-lg px-4 py-2 bg-secondary border"
-              />
-            </div>
-
-            <div className="flex gap-2 flex-col border-ternary w-full">
-              <label htmlFor="email">Email</label>
-              <input
-                type="text"
-                placeholder="email"
-                name="email"
-                id="email"
-                className="rounded-lg px-4 py-2 bg-secondary border"
-              />
-            </div>
-          </div>
-
-          <div className="flex gap-2 flex-col border-ternary w-full mt-2">
-            <label htmlFor="message">Message</label>
-            <textarea
-              placeholder="Ask anything"
-              className="rounded-lg px-4 py-2 bg-secondary border"
-              name="message"
-              id="message"
-            ></textarea>
-          </div>
-          <button className="rounded-lg px-4 py-2 bg-secondary border mt-2">
-            Submit
-          </button>
-        </form>
+        <GoogleFormLink />
+        <ContactForm />
       </section>
+    </div>
+  );
+};
+
+const ContactForm = () => {
+  return (
+    <>
+      <form action="post" className="flex gap-2 flex-col">
+        <div className="flex flex-col md:flex-row gap-4 w-full">
+          <div className="flex gap-2 flex-col border-ternary w-full">
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              placeholder="name"
+              name="name"
+              id="name"
+              className="rounded-lg px-4 py-2 bg-secondary border"
+            />
+          </div>
+
+          <div className="flex gap-2 flex-col border-ternary w-full">
+            <label htmlFor="email">Email</label>
+            <input
+              type="text"
+              placeholder="email"
+              name="email"
+              id="email"
+              className="rounded-lg px-4 py-2 bg-secondary border"
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-2 flex-col border-ternary w-full mt-2">
+          <label htmlFor="message">Message</label>
+          <textarea
+            placeholder="Ask anything"
+            className="rounded-lg px-4 py-2 bg-secondary border"
+            name="message"
+            id="message"
+          ></textarea>
+        </div>
+        <button className="rounded-lg px-4 py-2 bg-secondary border mt-2">
+          Submit
+        </button>
+      </form>
+    </>
+  );
+};
+
+const GoogleFormLink = () => {
+  return (
+    <div className="border px-4 py-2 rounded-xl">
+      <Link
+        href={"https://forms.gle/EikzMSbfMdhei2CD8"}
+        className="flex gap-2 items-center"
+      >
+        <IoLink />
+        <span>Click here to contact</span>
+      </Link>
     </div>
   );
 };
